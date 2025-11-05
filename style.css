@@ -1,0 +1,203 @@
+/* --- 1. 기본 및 폰트 설정 (다크 모드) --- */
+body {
+    font-family: 'Noto Sans KR', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    background-color: #121212;
+    color: #e0e0e0;
+}
+h2 { color: #ffffff; margin-left: 15px; }
+h3.testament-title {
+    background-color: #2a2a2a;
+    border-bottom: 1px solid #444;
+    padding: 10px 15px;
+    margin: 15px 0 5px 0;
+}
+
+/* --- 2. 화면 및 버튼 기본 스타일 --- */
+.screen.hidden { display: none; }
+.back-button {
+    padding: 10px; font-size: 16px; cursor: pointer;
+    margin: 10px; border: none; background: none; color: #e0e0e0;
+}
+.header-controls {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 10px; border-bottom: 1px solid #333;
+}
+
+/* --- 3. 그리드 아이템 (책/장 버튼) --- */
+.grid-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px; padding: 10px;
+}
+.grid-item {
+    border: 1px solid #444; border-radius: 8px;
+    padding: 20px 10px; text-align: center; cursor: pointer;
+    background-color: #2a2a2a; color: #e0e0e0;
+    transition: background-color 0.2s;
+}
+.grid-item:hover { background-color: #3a3a3a; border-color: #666; }
+.book-ot {
+    border-color: #3b82f6; background-color: #252e3d;
+    color: #93c5fd; font-weight: bold;
+}
+.book-ot:hover { background-color: #2f3d52; }
+.book-nt {
+    border-color: #ef4444; background-color: #3d2525;
+    color: #fca5a5; font-weight: bold;
+}
+.book-nt:hover { background-color: #522f2f; }
+
+/* --- 4. 본문 화면 (토글) --- */
+.translation-toggle { display: flex; align-items: center; }
+.toggle-btn {
+    font-size: 24px; padding: 5px 10px; cursor: pointer;
+    user-select: none; border: 1px solid #444;
+    border-radius: 4px; margin: 0 5px; background-color: #2a2a2a;
+}
+.toggle-btn:hover { background-color: #3a3a3a; }
+#current-translation {
+    font-size: 14px; font-weight: bold; color: #ffffff;
+    width: 100px; text-align: center;
+}
+
+/* --- 5. 본문 내용 --- */
+#chapter-display { 
+    padding: 15px; 
+    padding-bottom: 100px; /* (중요) 하단 제어판 높이만큼 여유 공간 확보 */
+}
+#chapter-display p.verse {
+    margin-bottom: 12px;
+    line-height: 1.7;
+    font-size: 1.1em;
+    cursor: pointer; /* 클릭/탭 가능함을 표시 */
+    padding: 5px 0; /* 클릭 영역 확보 */
+    border-radius: 4px;
+    transition: background-color 0.2s;
+}
+#chapter-display p.verse:hover {
+    background-color: #2a2a2a; /* 마우스 올리면 살짝 */
+}
+#chapter-display sup { color: #999; margin-right: 6px; font-weight: bold; }
+
+/* --- 6. 장(Chapter) 스크롤러 --- */
+#chapter-scroller-container {
+    overflow-x: auto; background-color: #2a2a2a;
+    padding: 10px 15px; border-top: 1px solid #444;
+    border-bottom: 1px solid #444;
+}
+#chapter-scroller { white-space: nowrap; }
+.chapter-scroll-btn {
+    display: inline-block; padding: 10px 15px; margin-right: 10px;
+    border: 1px solid #555; border-radius: 8px;
+    background-color: #3a3a3a; color: #e0e0e0;
+    cursor: pointer; font-weight: bold;
+}
+.chapter-scroll-btn:hover { background-color: #4a4a4a; }
+.chapter-scroll-btn.active {
+    background-color: #e0e0e0; color: #121212; border-color: #fff;
+}
+
+/* --- 7. 하단 빠른 이동 + 검색창 --- */
+#quick-jump-container {
+    display: flex;
+    flex-wrap: wrap; /* 창이 좁아지면 줄바꿈 */
+    padding: 15px;
+    gap: 10px;
+    background-color: #2a2a2a;
+    border-top: 1px solid #444;
+}
+#quick-jump-container select, #quick-jump-container button, #quick-jump-container input {
+    padding: 10px; font-size: 14px;
+    background-color: #3a3a3a; color: #e0e0e0;
+    border: 1px solid #555; border-radius: 5px;
+}
+#quick-jump-book { flex: 2; min-width: 120px; }
+#quick-jump-chapter { flex: 1; min-width: 60px; }
+#quick-jump-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: #3b82f6; border-color: #3b82f6; color: #fff; }
+#quick-jump-search { flex: 3; min-width: 150px; }
+#quick-jump-search-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: #4ade80; border-color: #4ade80; color: #121212; }
+
+/* --- 8. 상단 검색창 --- */
+#top-search-container {
+    display: flex;
+    padding: 10px 15px;
+    gap: 10px;
+    border-bottom: 1px solid #333;
+}
+#top-search-input {
+    flex: 1;
+    padding: 12px; font-size: 16px;
+    background-color: #2a2a2a; color: #e0e0e0;
+    border: 1px solid #555; border-radius: 5px;
+}
+#top-search-button {
+    padding: 10px 15px; font-size: 16px;
+    background-color: #4ade80;
+    border-color: #4ade80;
+    color: #121212;
+    border-radius: 5px; cursor: pointer; font-weight: bold;
+}
+
+/* --- 9. 검색 결과 화면 --- */
+#search-results-list {
+    padding: 10px 15px;
+}
+.search-result-item {
+    padding: 15px;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    background-color: #2a2a2a;
+    cursor: pointer;
+}
+.search-result-item:hover { background-color: #3a3a3a; }
+.search-result-item strong { font-size: 1.1em; color: #3b82f6; }
+.search-result-item p { line-height: 1.6; }
+.search-result-item mark {
+    background-color: #facc15; color: #121212;
+    border-radius: 3px; padding: 0 2px;
+}
+
+/* --- 10. 구절 선택 및 복사 --- */
+#chapter-display p.verse-selected {
+    background-color: #4a402a;
+    border-left: 3px solid #facc15;
+    padding-left: 12px; 
+}
+#selection-controls {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 15px;
+    background-color: #2a2a2a;
+    border-top: 1px solid #444;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 10;
+}
+#selection-controls.hidden {
+    display: none;
+}
+#selection-controls span {
+    font-weight: bold;
+    color: #facc15;
+}
+#selection-controls button {
+    padding: 10px 15px; font-size: 14px;
+    background-color: #3a3a3a; color: #e0e0e0;
+    border: 1px solid #555; border-radius: 5px;
+    cursor: pointer;
+}
+#selection-controls button:hover { background-color: #4a4a4a; }
+#selection-controls #copy-button {
+    background-color: #3b82f6;
+    border-color: #3b82f6;
+    color: #fff;
+    font-weight: bold;
+}
