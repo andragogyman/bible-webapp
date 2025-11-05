@@ -9,16 +9,16 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=5">
-    <script src="data.js?v=5" defer></script>
-    <script src="data_hanja.js?v=5" defer></script>
-    <script src="app.js?v=5" defer></script>
+    <link rel="stylesheet" href="style.css?v=7">
+    <script src="data.js?v=7" defer></script>
+    <script src="data_hanja.js?v=7" defer></script>
+    <script src="app.js?v=7" defer></script>
 </head>
 <body class="dark-mode"> <div id="book-screen" class="screen">
         <div class="header-controls">
             <h2>성경 선택</h2>
             <div>
-                <button id="my-memos-button" class="header-icon-button">📝</button>
+                <button id="my-memos-button" class="header-icon-button" title="내 메모 보기">📝</button>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="theme-toggle-main">
                         <input type="checkbox" id="theme-toggle-main" class="theme-toggle-input" />
@@ -28,7 +28,12 @@
             </div>
         </div>
         <div id="top-search-container">
-            <input type="text" id="top-search-input" placeholder="성경 전체 검색 (예: 태초에)">
+            <select id="top-search-type">
+                <option value="integrated">통합검색</option>
+                <option value="bible">성경검색</option>
+                <option value="memo">메모검색</option>
+            </select>
+            <input type="text" id="top-search-input" placeholder="성경 및 메모 검색">
             <button id="top-search-button">검색</button>
         </div>
         <h3 class="testament-title">구약</h3>
@@ -42,7 +47,8 @@
             <button id="back-to-book-list" class="back-button">&larr; 책 목록</button>
             <h2 id="chapter-selection-title"></h2>
             <div>
-                <button id="book-memo-button" class="header-icon-button">📖</button>
+                <button class="home-button header-icon-button" title="홈으로">🏠</button>
+                <button id="book-memo-button" class="header-icon-button" title="책 메모">📖</button>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="theme-toggle-chapter">
                         <input type="checkbox" id="theme-toggle-chapter" class="theme-toggle-input" />
@@ -63,7 +69,8 @@
                 <span id="toggle-right" class="toggle-btn">&rsaquo;</span>
             </div>
             <div>
-                <button id="chapter-memo-button" class="header-icon-button">📄</button>
+                <button class="home-button header-icon-button" title="홈으로">🏠</button>
+                <button id="chapter-memo-button" class="header-icon-button" title="장 메모">📄</button>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="theme-toggle-text">
                         <input type="checkbox" id="theme-toggle-text" class="theme-toggle-input" />
@@ -77,13 +84,24 @@
             <div id="chapter-scroller"></div>
         </div>
         <div id="chapter-display"></div>
-        <div id="quick-jump-container">
+        
+        <div id="footnote-container"></div>
+        
+        <div id="quick-jump-controls">
             <select id="quick-jump-book"></select>
             <select id="quick-jump-chapter"></select>
             <button id="quick-jump-go">이동</button>
-            <input type="text" id="quick-jump-search" placeholder="전체 검색">
+        </div>
+        <div id="quick-search-controls">
+            <select id="quick-search-type">
+                <option value="integrated">통합</option>
+                <option value="bible">성경</option>
+                <option value="memo">메모</option>
+            </select>
+            <input type="text" id="quick-jump-search" placeholder="검색">
             <button id="quick-jump-search-go">검색</button>
         </div>
+        
         <div id="selection-controls" class="hidden">
             <span id="selection-count">0개 구절 선택됨</span>
             <button id="copy-button">복사</button>
@@ -96,11 +114,14 @@
         <div class="header-controls">
             <button id="back-from-search" class="back-button">&larr; 뒤로가기</button>
             <h2 id="search-results-title"></h2>
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="theme-toggle-search">
-                    <input type="checkbox" id="theme-toggle-search" class="theme-toggle-input" />
-                    <span class="slider round"></span>
-                </label>
+            <div>
+                <button class="home-button header-icon-button" title="홈으로">🏠</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-search">
+                        <input type="checkbox" id="theme-toggle-search" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
         </div>
         <div id="search-results-list"></div>
@@ -110,15 +131,17 @@
         <div class="header-controls">
             <button id="back-from-memos" class="back-button">&larr; 책 목록</button>
             <h2>내 메모</h2>
-            <div class="theme-switch-wrapper">
-                <label class="theme-switch" for="theme-toggle-memos">
-                    <input type="checkbox" id="theme-toggle-memos" class="theme-toggle-input" />
-                    <span class="slider round"></span>
-                </label>
+            <div>
+                <button class="home-button header-icon-button" title="홈으로">🏠</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-memos">
+                        <input type="checkbox" id="theme-toggle-memos" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
             </div>
         </div>
-        <div id="memos-list-container">
-            </div>
+        <div id="memos-list-container"></div>
     </div>
 
     <div id="memo-modal-overlay" class="hidden">
