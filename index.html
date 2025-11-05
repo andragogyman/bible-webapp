@@ -1,17 +1,137 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>My lovely bible</title>
-
-    <script src="data.js"></script>
-
-    <script src="app.js"></script>
+    <title>My Lovely Bible</title>
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css?v=5">
+    <script src="data.js?v=5" defer></script>
+    <script src="data_hanja.js?v=5" defer></script>
+    <script src="app.js?v=5" defer></script>
 </head>
-<body>
-<h1>나의 사랑하는 책</h1>
-    <div id="bible-text"></div>    
+<body class="dark-mode"> <div id="book-screen" class="screen">
+        <div class="header-controls">
+            <h2>성경 선택</h2>
+            <div>
+                <button id="my-memos-button" class="header-icon-button">📝</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-main">
+                        <input type="checkbox" id="theme-toggle-main" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="top-search-container">
+            <input type="text" id="top-search-input" placeholder="성경 전체 검색 (예: 태초에)">
+            <button id="top-search-button">검색</button>
+        </div>
+        <h3 class="testament-title">구약</h3>
+        <div id="book-selection-grid-ot" class="grid-container"></div>
+        <h3 class="testament-title">신약</h3>
+        <div id="book-selection-grid-nt" class="grid-container"></div>
+    </div>
+
+    <div id="chapter-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-to-book-list" class="back-button">&larr; 책 목록</button>
+            <h2 id="chapter-selection-title"></h2>
+            <div>
+                <button id="book-memo-button" class="header-icon-button">📖</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-chapter">
+                        <input type="checkbox" id="theme-toggle-chapter" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="chapter-selection-grid" class="grid-container"></div>
+    </div>
+
+    <div id="text-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-to-chapter-list" class="back-button">&larr; 장 목록</button>
+            <div class="translation-toggle">
+                <span id="toggle-left" class="toggle-btn">&lsaquo;</span>
+                <span id="current-translation">개역한글</span>
+                <span id="toggle-right" class="toggle-btn">&rsaquo;</span>
+            </div>
+            <div>
+                <button id="chapter-memo-button" class="header-icon-button">📄</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-text">
+                        <input type="checkbox" id="theme-toggle-text" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <h2 id="chapter-display-title"></h2>
+        <div id="chapter-scroller-container">
+            <div id="chapter-scroller"></div>
+        </div>
+        <div id="chapter-display"></div>
+        <div id="quick-jump-container">
+            <select id="quick-jump-book"></select>
+            <select id="quick-jump-chapter"></select>
+            <button id="quick-jump-go">이동</button>
+            <input type="text" id="quick-jump-search" placeholder="전체 검색">
+            <button id="quick-jump-search-go">검색</button>
+        </div>
+        <div id="selection-controls" class="hidden">
+            <span id="selection-count">0개 구절 선택됨</span>
+            <button id="copy-button">복사</button>
+            <button id="select-all-button">전체선택</button>
+            <button id="deselect-all-button">선택해제</button>
+        </div>
+    </div>
+
+    <div id="search-results-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-from-search" class="back-button">&larr; 뒤로가기</button>
+            <h2 id="search-results-title"></h2>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle-search">
+                    <input type="checkbox" id="theme-toggle-search" class="theme-toggle-input" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div id="search-results-list"></div>
+    </div>
+    
+    <div id="memos-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-from-memos" class="back-button">&larr; 책 목록</button>
+            <h2>내 메모</h2>
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="theme-toggle-memos">
+                    <input type="checkbox" id="theme-toggle-memos" class="theme-toggle-input" />
+                    <span class="slider round"></span>
+                </label>
+            </div>
+        </div>
+        <div id="memos-list-container">
+            </div>
+    </div>
+
+    <div id="memo-modal-overlay" class="hidden">
+        <div id="memo-modal">
+            <h3 id="memo-word-title"></h3>
+            <textarea id="memo-textarea" rows="6" placeholder="메모를 입력하세요..."></textarea>
+            <div class="memo-modal-buttons">
+                <button id="memo-delete-button">삭제</button>
+                <button id="memo-save-button">저장</button>
+                <button id="memo-close-button">닫기</button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>

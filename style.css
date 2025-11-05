@@ -1,170 +1,259 @@
-/* --- 1. 기본 및 폰트 설정 (다크 모드) --- */
+/* --- 1. 테마 변수 (라이트/다크 모드) --- */
+:root {
+    --color-bg: #ffffff;
+    --color-text: #212121;
+    --color-text-subtle: #555;
+    --color-bg-alt: #f0f0f0;
+    --color-bg-alt-2: #e0e0e0;
+    --color-border: #ccc;
+    --color-border-alt: #aaa;
+    
+    --color-ot-border: #0066cc;
+    --color-ot-bg: #e6f2ff;
+    --color-ot-text: #004a99;
+    --color-ot-hover: #cce4ff;
+    
+    --color-nt-border: #cc0000;
+    --color-nt-bg: #ffeeee;
+    --color-nt-text: #990000;
+    --color-nt-hover: #ffcccc;
+
+    --color-accent-blue: #007bff;
+    --color-accent-green: #28a745;
+    --color-accent-yellow: #ffc107;
+    --color-accent-yellow-text: #333;
+    
+    --color-hanja-text: #0056b3;
+    --color-hanja-border: #007bff;
+    --color-hanja-hover-bg: #e6f2ff;
+    
+    --color-memo-text: #28a745; /* 메모된 단어 (녹색) */
+}
+
+body.dark-mode {
+    --color-bg: #121212;
+    --color-text: #e0e0e0;
+    --color-text-subtle: #999;
+    --color-bg-alt: #2a2a2a;
+    --color-bg-alt-2: #3a3a3a;
+    --color-border: #444;
+    --color-border-alt: #555;
+    
+    --color-ot-border: #3b82f6;
+    --color-ot-bg: #252e3d;
+    --color-ot-text: #93c5fd;
+    --color-ot-hover: #2f3d52;
+    
+    --color-nt-border: #ef4444;
+    --color-nt-bg: #3d2525;
+    --color-nt-text: #fca5a5;
+    --color-nt-hover: #522f2f;
+    
+    --color-accent-blue: #3b82f6;
+    --color-accent-green: #4ade80;
+    --color-accent-yellow: #facc15;
+    --color-accent-yellow-text: #121212;
+
+    --color-hanja-text: #93c5fd;
+    --color-hanja-border: #3b82f6;
+    --color-hanja-hover-bg: #252e3d;
+    
+    --color-memo-text: #4ade80; /* 메모된 단어 (밝은 녹색) */
+}
+
+/* --- 2. 기본 및 폰트 설정 --- */
 body {
     font-family: 'Noto Sans KR', sans-serif;
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    background-color: #121212;
-    color: #e0e0e0;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    transition: background-color 0.2s, color 0.2s;
 }
-h2 { color: #ffffff; margin-left: 15px; }
+h2 { color: var(--color-text); margin-left: 15px; }
 h3.testament-title {
-    background-color: #2a2a2a;
-    border-bottom: 1px solid #444;
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
     padding: 10px 15px;
     margin: 15px 0 5px 0;
 }
 
-/* --- 2. 화면 및 버튼 기본 스타일 --- */
+/* --- 3. 화면 및 버튼 기본 스타일 --- */
 .screen.hidden { display: none; }
 .back-button {
     padding: 10px; font-size: 16px; cursor: pointer;
-    margin: 10px; border: none; background: none; color: #e0e0e0;
+    margin: 10px; border: none; background: none; color: var(--color-text);
 }
 .header-controls {
     display: flex; justify-content: space-between; align-items: center;
-    padding: 0 10px; border-bottom: 1px solid #333;
+    padding: 0 10px; border-bottom: 1px solid var(--color-border);
+}
+/* (새 스타일) 헤더 우측의 아이콘 버튼 (메모, 테마) */
+.header-controls > div {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+/* (새 스타일) 메모 아이콘 버튼 */
+.header-icon-button {
+    background: none;
+    border: 1px solid var(--color-border);
+    border-radius: 5px;
+    color: var(--color-text);
+    font-size: 1.2em;
+    width: 38px;
+    height: 38px;
+    cursor: pointer;
+}
+.header-icon-button:hover {
+    background-color: var(--color-bg-alt);
 }
 
-/* --- 3. 그리드 아이템 (책/장 버튼) --- */
+/* --- 4. 그리드 아이템 (책/장 버튼) --- */
 .grid-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
     gap: 10px; padding: 10px;
 }
 .grid-item {
-    border: 1px solid #444; border-radius: 8px;
+    border: 1px solid var(--color-border); border-radius: 8px;
     padding: 20px 10px; text-align: center; cursor: pointer;
-    background-color: #2a2a2a; color: #e0e0e0;
+    background-color: var(--color-bg-alt); color: var(--color-text);
     transition: background-color 0.2s;
 }
-.grid-item:hover { background-color: #3a3a3a; border-color: #666; }
+.grid-item:hover { background-color: var(--color-bg-alt-2); border-color: var(--color-border-alt); }
 .book-ot {
-    border-color: #3b82f6; background-color: #252e3d;
-    color: #93c5fd; font-weight: bold;
+    border-color: var(--color-ot-border); background-color: var(--color-ot-bg);
+    color: var(--color-ot-text); font-weight: bold;
 }
-.book-ot:hover { background-color: #2f3d52; }
+.book-ot:hover { background-color: var(--color-ot-hover); }
 .book-nt {
-    border-color: #ef4444; background-color: #3d2525;
-    color: #fca5a5; font-weight: bold;
+    border-color: var(--color-nt-border); background-color: var(--color-nt-bg);
+    color: var(--color-nt-text); font-weight: bold;
 }
-.book-nt:hover { background-color: #522f2f; }
+.book-nt:hover { background-color: var(--color-nt-hover); }
 
-/* --- 4. 본문 화면 (토글) --- */
+/* --- 5. 본문 화면 (토글) --- */
 .translation-toggle { display: flex; align-items: center; }
 .toggle-btn {
     font-size: 24px; padding: 5px 10px; cursor: pointer;
-    user-select: none; border: 1px solid #444;
-    border-radius: 4px; margin: 0 5px; background-color: #2a2a2a;
+    user-select: none; border: 1px solid var(--color-border);
+    border-radius: 4px; margin: 0 5px; background-color: var(--color-bg-alt);
 }
-.toggle-btn:hover { background-color: #3a3a3a; }
+.toggle-btn:hover { background-color: var(--color-bg-alt-2); }
 #current-translation {
-    font-size: 14px; font-weight: bold; color: #ffffff;
+    font-size: 14px; font-weight: bold; color: var(--color-text);
     width: 100px; text-align: center;
 }
 
-/* --- 5. 본문 내용 --- */
+/* --- 6. 본문 내용 --- */
 #chapter-display { 
     padding: 15px; 
-    padding-bottom: 100px; /* (중요) 하단 제어판 높이만큼 여유 공간 확보 */
+    padding-bottom: 100px;
 }
 #chapter-display p.verse {
     margin-bottom: 12px;
     line-height: 1.7;
     font-size: 1.1em;
-    cursor: pointer; /* 클릭/탭 가능함을 표시 */
-    padding: 5px 0; /* 클릭 영역 확보 */
+    padding: 5px 0;
     border-radius: 4px;
     transition: background-color 0.2s;
 }
-#chapter-display p.verse:hover {
-    background-color: #2a2a2a; /* 마우스 올리면 살짝 */
+#chapter-display sup { 
+    color: var(--color-text-subtle); 
+    margin-right: 6px; 
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
 }
-#chapter-display sup { color: #999; margin-right: 6px; font-weight: bold; }
+#chapter-display sup:hover {
+    color: var(--color-text);
+}
 
-/* --- 6. 장(Chapter) 스크롤러 --- */
+/* --- 7. 장(Chapter) 스크롤러 --- */
 #chapter-scroller-container {
-    overflow-x: auto; background-color: #2a2a2a;
-    padding: 10px 15px; border-top: 1px solid #444;
-    border-bottom: 1px solid #444;
+    overflow-x: auto; background-color: var(--color-bg-alt);
+    padding: 10px 15px; border-top: 1px solid var(--color-border);
+    border-bottom: 1px solid var(--color-border);
 }
 #chapter-scroller { white-space: nowrap; }
 .chapter-scroll-btn {
     display: inline-block; padding: 10px 15px; margin-right: 10px;
-    border: 1px solid #555; border-radius: 8px;
-    background-color: #3a3a3a; color: #e0e0e0;
+    border: 1px solid var(--color-border-alt); border-radius: 8px;
+    background-color: var(--color-bg-alt-2); color: var(--color-text);
     cursor: pointer; font-weight: bold;
 }
 .chapter-scroll-btn:hover { background-color: #4a4a4a; }
 .chapter-scroll-btn.active {
-    background-color: #e0e0e0; color: #121212; border-color: #fff;
+    background-color: var(--color-text); color: var(--color-bg); border-color: var(--color-text);
 }
 
-/* --- 7. 하단 빠른 이동 + 검색창 --- */
+/* --- 8. 하단 빠른 이동 + 검색창 --- */
 #quick-jump-container {
     display: flex;
-    flex-wrap: wrap; /* 창이 좁아지면 줄바꿈 */
+    flex-wrap: wrap;
     padding: 15px;
     gap: 10px;
-    background-color: #2a2a2a;
-    border-top: 1px solid #444;
+    background-color: var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
 }
 #quick-jump-container select, #quick-jump-container button, #quick-jump-container input {
     padding: 10px; font-size: 14px;
-    background-color: #3a3a3a; color: #e0e0e0;
-    border: 1px solid #555; border-radius: 5px;
+    background-color: var(--color-bg-alt-2); color: var(--color-text);
+    border: 1px solid var(--color-border-alt); border-radius: 5px;
 }
 #quick-jump-book { flex: 2; min-width: 120px; }
 #quick-jump-chapter { flex: 1; min-width: 60px; }
-#quick-jump-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: #3b82f6; border-color: #3b82f6; color: #fff; }
+#quick-jump-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: var(--color-accent-blue); border-color: var(--color-accent-blue); color: #fff; }
 #quick-jump-search { flex: 3; min-width: 150px; }
-#quick-jump-search-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: #4ade80; border-color: #4ade80; color: #121212; }
+#quick-jump-search-go { flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; background-color: var(--color-accent-green); border-color: var(--color-accent-green); color: var(--color-bg); }
 
-/* --- 8. 상단 검색창 --- */
+/* --- 9. 상단 검색창 --- */
 #top-search-container {
     display: flex;
     padding: 10px 15px;
     gap: 10px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid var(--color-border);
 }
 #top-search-input {
     flex: 1;
     padding: 12px; font-size: 16px;
-    background-color: #2a2a2a; color: #e0e0e0;
-    border: 1px solid #555; border-radius: 5px;
+    background-color: var(--color-bg-alt); color: var(--color-text);
+    border: 1px solid var(--color-border-alt); border-radius: 5px;
 }
 #top-search-button {
     padding: 10px 15px; font-size: 16px;
-    background-color: #4ade80;
-    border-color: #4ade80;
-    color: #121212;
+    background-color: var(--color-accent-green);
+    border-color: var(--color-accent-green);
+    color: var(--color-bg);
     border-radius: 5px; cursor: pointer; font-weight: bold;
 }
 
-/* --- 9. 검색 결과 화면 --- */
+/* --- 10. 검색 결과 화면 --- */
 #search-results-list {
     padding: 10px 15px;
 }
 .search-result-item {
     padding: 15px;
-    border: 1px solid #3a3a3a;
+    border: 1px solid var(--color-bg-alt-2);
     border-radius: 8px;
     margin-bottom: 10px;
-    background-color: #2a2a2a;
+    background-color: var(--color-bg-alt);
     cursor: pointer;
 }
-.search-result-item:hover { background-color: #3a3a3a; }
-.search-result-item strong { font-size: 1.1em; color: #3b82f6; }
+.search-result-item:hover { background-color: var(--color-bg-alt-2); }
+.search-result-item strong { font-size: 1.1em; color: var(--color-accent-blue); }
 .search-result-item p { line-height: 1.6; }
 .search-result-item mark {
-    background-color: #facc15; color: #121212;
+    background-color: var(--color-accent-yellow); color: var(--color-accent-yellow-text);
     border-radius: 3px; padding: 0 2px;
 }
 
-/* --- 10. 구절 선택 및 복사 --- */
+/* --- 11. 구절 선택 및 복사 --- */
 #chapter-display p.verse-selected {
     background-color: #4a402a;
-    border-left: 3px solid #facc15;
+    border-left: 3px solid var(--color-accent-yellow);
     padding-left: 12px; 
 }
 #selection-controls {
@@ -172,8 +261,8 @@ h3.testament-title {
     justify-content: space-around;
     align-items: center;
     padding: 15px;
-    background-color: #2a2a2a;
-    border-top: 1px solid #444;
+    background-color: var(--color-bg-alt);
+    border-top: 1px solid var(--color-border);
     position: fixed;
     bottom: 0;
     left: 0;
@@ -181,23 +270,194 @@ h3.testament-title {
     box-sizing: border-box;
     z-index: 10;
 }
-#selection-controls.hidden {
-    display: none;
-}
-#selection-controls span {
-    font-weight: bold;
-    color: #facc15;
-}
+#selection-controls.hidden { display: none; }
+#selection-controls span { font-weight: bold; color: var(--color-accent-yellow); }
 #selection-controls button {
     padding: 10px 15px; font-size: 14px;
-    background-color: #3a3a3a; color: #e0e0e0;
-    border: 1px solid #555; border-radius: 5px;
+    background-color: var(--color-bg-alt-2); color: var(--color-text);
+    border: 1px solid var(--color-border-alt); border-radius: 5px;
     cursor: pointer;
 }
 #selection-controls button:hover { background-color: #4a4a4a; }
 #selection-controls #copy-button {
-    background-color: #3b82f6;
-    border-color: #3b82f6;
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
     color: #fff;
     font-weight: bold;
+}
+
+/* --- 12. 사전/메모 연결 --- */
+.word-general {
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--color-border);
+    text-decoration-thickness: 1px;
+}
+.word-general:hover {
+    color: var(--color-text);
+    background-color: var(--color-bg-alt-2);
+}
+.word-memo {
+    font-weight: bold;
+    color: var(--color-memo-text);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--color-memo-text);
+    text-decoration-thickness: 1px;
+}
+.word-memo:hover {
+    background-color: var(--color-bg-alt-2);
+}
+.word-hanja {
+    color: var(--color-hanja-text);
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-color: var(--color-hanja-border);
+    text-decoration-thickness: 1px;
+}
+.word-hanja:hover {
+    color: var(--color-text);
+    background-color: var(--color-hanja-hover-bg);
+}
+
+/* --- 13. 테마 스위치 --- */
+.theme-switch-wrapper {
+    display: flex;
+    align-items: center;
+    margin-right: 15px;
+}
+.theme-switch {
+    position: relative;
+    display: inline-block;
+    width: 50px;
+    height: 24px;
+}
+.theme-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: .4s;
+    border-radius: 34px;
+}
+.slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+input:checked + .slider {
+    background-color: #3b82f6;
+}
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+/* --- 14. 메모 모달 --- */
+#memo-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#memo-modal-overlay.hidden {
+    display: none;
+}
+#memo-modal {
+    background: var(--color-bg);
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+#memo-modal h3 {
+    margin-top: 0;
+    color: var(--color-accent-yellow);
+}
+#memo-modal textarea {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1em;
+    border: 1px solid var(--color-border-alt);
+    border-radius: 5px;
+    background-color: var(--color-bg-alt);
+    color: var(--color-text);
+}
+.memo-modal-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 15px;
+}
+.memo-modal-buttons button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#memo-save-button {
+    background-color: var(--color-accent-green);
+    color: var(--color-bg);
+}
+#memo-delete-button {
+    background-color: #ef4444;
+    color: #fff;
+    margin-right: auto;
+}
+#memo-close-button {
+    background-color: var(--color-bg-alt-2);
+    color: var(--color-text);
+}
+
+/* --- 15. (새 스타일) '내 메모' 화면 --- */
+#memos-list-container {
+    padding: 15px;
+}
+.memo-list-item {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+    cursor: pointer;
+}
+.memo-list-item:hover {
+    background-color: var(--color-bg-alt-2);
+}
+.memo-list-item h4 {
+    margin: 0 0 10px 0;
+    color: var(--color-accent-blue);
+}
+.memo-list-item p {
+    margin: 0;
+    white-space: pre-wrap; /* \n 줄바꿈 표시 */
+    word-break: break-word;
+    color: var(--color-text);
+}
+.memo-list-item span {
+    font-size: 0.9em;
+    color: var(--color-text-subtle);
 }
