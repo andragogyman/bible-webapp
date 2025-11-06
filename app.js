@@ -1,5 +1,5 @@
 // --- 1. 전역 변수 ---
-let bookScreen, chapterScreen, textScreen, searchResultsScreen, memosScreen;
+let bookScreen, chapterScreen, textScreen, searchResultsScreen, memosScreen, qtListScreen, qtEntryScreen;
 let bookGridOt, bookGridNt;
 let chapterGrid, textDisplay, footnoteContainer;
 let chapterSelectionTitle, chapterDisplayTitle;
@@ -10,7 +10,7 @@ let quickJumpBook, quickJumpChapter, quickJumpGo;
 let topSearchInput, topSearchButton, topSearchType;
 let quickJumpSearchInput, quickJumpSearchGo, quickSearchType;
 let searchResultsList, searchResultsTitle;
-let backFromSearchBtn, backFromMemosBtn;
+let backFromSearchBtn, backFromMemosBtn, backFromQtListBtn, backFromQtEntryBtn;
 let lastActiveScreen = 'book';
 let selectionControls, selectionCountSpan, copyButton, selectAllButton, deselectAllButton;
 let selectedVerses = new Set();
@@ -33,7 +33,28 @@ let currentPhraseStartIndex = -1; // (신규) 드래그로 선택한 구간의 �
 let myMemosButton, memosListContainer;
 let bookMemoButton, chapterMemoButton;
 
+// (신규) Q.T. 변수
+let myQtButton, qtListContainer, newQtButton;
+let qtEntryTitle, qtSaveButton;
+let qtBookSelect, qtChapterSelect, qtSelectGoBtn, qtSelectProverbsBtn, qtSelectRandomBtn;
+let qtScriptureDisplay, qtScriptureRef, qtScriptureText;
+let qtStep2, qtStep3, qtStep4, qtStep5;
+let qtAlarm1, qtAlarm2, qtNextAlarm, qtNextPlace;
+let currentQtEntry = null; // 현재 작성 중인 QT 객체
+
 let chapterFootnotes = [];
+
+// (신규) 랜덤 구절 목록 (필요한 만큼 추가 가능)
+const POPULAR_VERSES = [
+    { b: "요한복음", c: 3, v: 16 },
+    { b: "로마서", c: 8, v: 28 },
+    { b: "시편", c: 23, v: 1 },
+    { b: "빌립보서", c: 4, v: 13 },
+    { b: "창세기", c: 1, v: 1 },
+    { b: "잠언", c: 3, v: 5 },
+    { b: "마태복음", c: 11, v: 28 },
+    { b: "여호수아", c: 1, v: 9 }
+];
 
 // --- 2. 앱 초기화 ---
 window.addEventListener('DOMContentLoaded', () => {
@@ -45,6 +66,8 @@ window.addEventListener('DOMContentLoaded', () => {
         textScreen = document.getElementById('text-screen');
         searchResultsScreen = document.getElementById('search-results-screen');
         memosScreen = document.getElementById('memos-screen');
+        qtListScreen = document.getElementById('qt-list-screen'); // (수정)
+        qtEntryScreen = document.getElementById('qt-entry-screen'); // (신규)
         
         bookGridOt = document.getElementById('book-selection-grid-ot');
         bookGridNt = document.getElementById('book-selection-grid-nt');
@@ -95,8 +118,36 @@ window.addEventListener('DOMContentLoaded', () => {
         bookMemoButton = document.getElementById('book-memo-button');
         chapterMemoButton = document.getElementById('chapter-memo-button');
 
+        // (신규) Q.T. 요소 찾기
+        myQtButton = document.getElementById('my-qt-button');
+        qtListContainer = document.getElementById('qt-list-container');
+        backFromQtListBtn = document.getElementById('back-from-qt-list');
+        newQtButton = document.getElementById('new-qt-button');
+        
+        qtEntryScreen = document.getElementById('qt-entry-screen');
+        backFromQtEntryBtn = document.getElementById('back-from-qt-entry');
+        qtEntryTitle = document.getElementById('qt-entry-title');
+        qtSaveButton = document.getElementById('qt-save-button');
+        qtBookSelect = document.getElementById('qt-book-select');
+        qtChapterSelect = document.getElementById('qt-chapter-select');
+        qtSelectGoBtn = document.getElementById('qt-select-go-btn');
+        qtSelectProverbsBtn = document.getElementById('qt-select-proverbs-btn');
+        qtSelectRandomBtn = document.getElementById('qt-select-random-btn');
+        qtScriptureDisplay = document.getElementById('qt-scripture-display');
+        qtScriptureRef = document.getElementById('qt-scripture-ref');
+        qtScriptureText = document.getElementById('qt-scripture-text');
+        qtStep2 = document.getElementById('qt-step2');
+        qtStep3 = document.getElementById('qt-step3');
+        qtStep4 = document.getElementById('qt-step4');
+        qtStep5 = document.getElementById('qt-step5');
+        qtAlarm1 = document.getElementById('qt-alarm1');
+        qtAlarm2 = document.getElementById('qt-alarm2');
+        qtNextAlarm = document.getElementById('qt-next-alarm');
+        qtNextPlace = document.getElementById('qt-next-place');
+
+
         // (중요) 하나라도 null이면 여기서 오류 발생 (먹통의 근본 원인)
-        if (!bookScreen || !chapterGrid || !memoModalOverlay || !themeToggles.length || !myMemosButton || !bookMemoButton || !chapterMemoButton || !footnoteContainer || !topSearchType || !homeButtons.length || !document.getElementById('bottom-controls-container')) {
+        if (!bookScreen || !chapterGrid || !memoModalOverlay || !themeToggles.length || !myMemosButton || !bookMemoButton || !chapterMemoButton || !footnoteContainer || !topSearchType || !homeButtons.length || !document.getElementById('bottom-controls-container') || !qtListScreen || !myQtButton || !qtEntryScreen || !newQtButton || !qtBookSelect ) {
             throw new Error("필수 HTML 요소 중 일부를 찾을 수 없습니다. index.html 파일이 최신 버전인지 확인하세요.");
         }
 
@@ -109,6 +160,7 @@ window.addEventListener('DOMContentLoaded', () => {
     // 2-2. 기본 기능 초기화
     generateBookList();
     populateBookDropdown();
+    populateQtBookDropdown(); // (신규) Q.T.용 드롭다운 채우기
 
     // 2-3. (수정) '드래그' 및 '한자' 클릭 리스너
     textDisplay.addEventListener('mouseup', handleTextSelection); // 드래그(선택)
@@ -146,6 +198,31 @@ window.addEventListener('DOMContentLoaded', () => {
     backFromMemosBtn.addEventListener('click', () => showScreen('book'));
     bookMemoButton.addEventListener('click', () => openMemoModal(currentBook, 'book'));
     chapterMemoButton.addEventListener('click', () => openMemoModal(`${currentBook} ${currentChapter}장`, 'chapter'));
+
+    // (신규) 2-7-2. 'Q.T.' 버튼 리스너
+    myQtButton.addEventListener('click', () => {
+        showScreen('qt-list');
+        loadQtList();
+    });
+    backFromQtListBtn.addEventListener('click', () => showScreen('book'));
+    newQtButton.addEventListener('click', openNewQtEntry);
+    backFromQtEntryBtn.addEventListener('click', () => showScreen('qt-list'));
+    qtSaveButton.addEventListener('click', saveQtEntry);
+
+    // (신규) Q.T. 목록 삭제를 위한 이벤트 위임
+    qtListContainer.addEventListener('click', (e) => {
+        const deleteBtn = e.target.closest('.delete-qt-btn');
+        if (deleteBtn) {
+            const qtId = deleteBtn.dataset.qtId;
+            deleteQtEntry(qtId);
+        }
+    });
+
+    // (신규) Q.T. 성구 선택 리스너
+    qtBookSelect.addEventListener('change', () => populateQtChapterDropdown(qtBookSelect.value));
+    qtSelectGoBtn.addEventListener('click', handleQtSelectGo);
+    qtSelectProverbsBtn.addEventListener('click', handleQtSelectProverbs);
+    qtSelectRandomBtn.addEventListener('click', handleQtSelectRandom);
 
 
     // 2-8. 검색 버튼 이벤트 리스너
@@ -214,6 +291,8 @@ function showScreen(screenName) {
     textScreen.classList.add('hidden');
     searchResultsScreen.classList.add('hidden');
     memosScreen.classList.add('hidden');
+    qtListScreen.classList.add('hidden'); // (신규)
+    qtEntryScreen.classList.add('hidden'); // (신규)
     
     // (추가) 하단 고정 메뉴 제어
     const bottomControls = document.getElementById('bottom-controls-container');
@@ -228,6 +307,8 @@ function showScreen(screenName) {
     else if (screenName === 'text') textScreen.classList.remove('hidden');
     else if (screenName === 'search') searchResultsScreen.classList.remove('hidden');
     else if (screenName === 'memos') memosScreen.classList.remove('hidden');
+    else if (screenName === 'qt-list') qtListScreen.classList.remove('hidden'); // (신규)
+    else if (screenName === 'qt-entry') qtEntryScreen.classList.remove('hidden'); // (신규)
     
     if (screenName !== 'text') {
         clearAllSelections();
@@ -358,9 +439,7 @@ function appendVerseToDisplay(verseNum, verseText) {
         const verseMemoKey = getMemoKey(verseId, 'verse_selection');
         const allMemos = JSON.parse(localStorage.getItem(verseMemoKey) || '[]');
         
-        // ******** (핵심 수정) ********
-        // 'startIndex'가 있는, 유효한 새 형식의 메모만 필터링합니다.
-        // 'startIndex'가 없는 오래된 형식의 메모는 (위치가 부정확하므로) *무시*합니다.
+        // (핵심 수정) 'startIndex'가 있는, 유효한 새 형식의 메모만 필터링합니다.
         const validMemos = allMemos.filter(memo => typeof memo.startIndex === 'number');
         
         // 1. 각주 목록 생성 (오름차순) - 'validMemos' 사용
@@ -1026,4 +1105,201 @@ function generateMemosList() {
         
         memosListContainer.appendChild(item);
     });
+}
+
+// --- (신규) 14. 'Q.T.' 관련 함수들 ---
+
+// (신규) Q.T. 화면용 성경 드롭다운 채우기
+function populateQtBookDropdown() {
+    qtBookSelect.innerHTML = '';
+    BIBLE_BOOKS.forEach(book => {
+        const option = document.createElement('option');
+        option.value = book.name; option.textContent = book.name;
+        qtBookSelect.appendChild(option);
+    });
+    populateQtChapterDropdown(BIBLE_BOOKS[0].name);
+}
+
+// (신규) Q.T. 화면용 장 드롭다운 채우기
+function populateQtChapterDropdown(selectedBookName) {
+    const bookData = BIBLE_BOOKS.find(b => b.name === selectedBookName);
+    if (!bookData) return;
+    const chapterCount = bookData.chapters;
+    qtChapterSelect.innerHTML = '';
+    for (let i = 1; i <= chapterCount; i++) {
+        const option = document.createElement('option');
+        option.value = i; option.textContent = `${i}장`;
+        qtChapterSelect.appendChild(option);
+    }
+}
+
+// (신규) Q.T. 화면에 선택한 성구 표시
+function displayQtScripture(book, chapter, verse = null) {
+    let ref = '';
+    let text = '';
+    
+    try {
+        const chapterKey = String(chapter);
+        const versesArray = BIBLE_TEXT_DATA["개역한글"][book][chapterKey];
+        if (!versesArray) throw new Error("데이터를 찾을 수 없습니다.");
+
+        if (verse) {
+            // 특정 구절만 표시 (랜덤 선택)
+            ref = `${book} ${chapter}:${verse}`;
+            text = `(${verse}) ${versesArray[verse - 1]}`;
+        } else {
+            // 장 전체 표시 (수동 선택, 잠언)
+            ref = `${book} ${chapter}장`;
+            text = versesArray.map((v, i) => `(${i + 1}) ${v}`).join('\n');
+        }
+
+        qtScriptureRef.textContent = ref;
+        qtScriptureText.innerHTML = text.replace(/\n/g, '<br>'); // 줄바꿈 적용
+        qtScriptureDisplay.classList.remove('hidden');
+
+        // 현재 QT 객체에 성구 정보 저장
+        if(currentQtEntry) {
+            currentQtEntry.scriptureRef = ref;
+        }
+    } catch (error) {
+        alert("성경 본문을 불러오는 데 실패했습니다: " + error.message);
+        qtScriptureDisplay.classList.add('hidden');
+    }
+}
+
+// (신규) Q.T. 성구 선택 - (1) 수동 선택
+function handleQtSelectGo() {
+    const book = qtBookSelect.value;
+    const chapter = parseInt(qtChapterSelect.value, 10);
+    displayQtScripture(book, chapter);
+}
+
+// (신규) Q.T. 성구 선택 - (2) 오늘의 잠언
+function handleQtSelectProverbs() {
+    const today = new Date();
+    const day = today.getDate(); // 예: 6일
+    // 잠언은 31장까지 있으므로 날짜와 완벽히 일치
+    displayQtScripture('잠언', day);
+}
+
+// (신규) Q.T. 성구 선택 - (3) 랜덤
+function handleQtSelectRandom() {
+    const randomVerse = POPULAR_VERSES[Math.floor(Math.random() * POPULAR_VERSES.length)];
+    displayQtScripture(randomVerse.b, randomVerse.c, randomVerse.v);
+}
+
+
+// (신규) Q.T. 새 묵상 화면 열기
+function openNewQtEntry() {
+    const today = new Date();
+    const dateString = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+    
+    // 새 QT 객체 생성
+    currentQtEntry = {
+        id: Date.now().toString(),
+        date: dateString,
+        scriptureRef: '',
+        step2: '',
+        step3: '',
+        step4: '',
+        step5: '',
+        alarm1: '',
+        alarm2: '',
+        nextAlarm: '',
+        nextPlace: ''
+    };
+    
+    // 입력창 초기화
+    qtEntryTitle.textContent = `${dateString} 묵상`;
+    qtScriptureDisplay.classList.add('hidden');
+    qtScriptureRef.textContent = '';
+    qtScriptureText.textContent = '';
+    
+    qtStep2.value = '';
+    qtStep3.value = '';
+    qtStep4.value = '';
+    qtStep5.value = '';
+    
+    qtAlarm1.value = '';
+    qtAlarm2.value = '';
+    qtNextAlarm.value = '';
+    qtNextPlace.value = '';
+    
+    showScreen('qt-entry');
+}
+
+// (신규) Q.T. 묵상 저장하기
+function saveQtEntry() {
+    if (!currentQtEntry) return;
+
+    // 1. 성구 선택했는지 확인
+    if (!currentQtEntry.scriptureRef) {
+        alert("성구를 먼저 선택해주세요.");
+        return;
+    }
+    
+    // 2. 묵상 내용 저장
+    currentQtEntry.step2 = qtStep2.value;
+    currentQtEntry.step3 = qtStep3.value;
+    currentQtEntry.step4 = qtStep4.value;
+    currentQtEntry.step5 = qtStep5.value;
+    
+    // 3. 알람/다음 묵상 (기초) 데이터 저장
+    currentQtEntry.alarm1 = qtAlarm1.value;
+    currentQtEntry.alarm2 = qtAlarm2.value;
+    currentQtEntry.nextAlarm = qtNextAlarm.value;
+    currentQtEntry.nextPlace = qtNextPlace.value;
+    
+    // 4. localStorage에 저장
+    const qts = JSON.parse(localStorage.getItem('myQts') || '[]');
+    qts.push(currentQtEntry);
+    localStorage.setItem('myQts', JSON.stringify(qts));
+    
+    alert('묵상이 저장되었습니다.');
+    
+    currentQtEntry = null; // 현재 QT 객체 비우기
+    showScreen('qt-list'); // 목록 화면으로 이동
+    loadQtList(); // 목록 새로고침
+}
+
+// (신규) Q.T. 묵상 목록 불러오기
+function loadQtList() {
+    qtListContainer.innerHTML = '';
+    const qts = JSON.parse(localStorage.getItem('myQts') || '[]');
+    
+    if (qts.length === 0) {
+        qtListContainer.innerHTML = '<p>저장된 묵상이 없습니다. "새 묵상하기"를 눌러 시작해보세요.</p>';
+        return;
+    }
+    
+    // 최신순으로 표시 (배열의 뒤에서부터)
+    qts.slice().reverse().forEach(qt => {
+        const item = document.createElement('div');
+        item.className = 'qt-list-item';
+        
+        item.innerHTML = `
+            <div class="qt-list-item-header">
+                <strong>${qt.date}</strong>
+                <span>${qt.scriptureRef}</span>
+            </div>
+            <p>${qt.step2.substring(0, 50) || '...'}...</p>
+            <button class="delete-qt-btn" data-qt-id="${qt.id}">삭제</button>
+        `;
+        // (참고) 지금은 클릭 시 삭제만 구현. 추후 클릭 시 qt-entry-screen에서 열람/수정하도록 확장 가능.
+        
+        qtListContainer.appendChild(item);
+    });
+}
+
+// (신규) Q.T. 묵상 삭제하기
+function deleteQtEntry(qtId) {
+    if (!confirm("이 묵상을 삭제하시겠습니까?")) {
+        return;
+    }
+    
+    let qts = JSON.parse(localStorage.getItem('myQts') || '[]');
+    qts = qts.filter(q => q.id !== qtId); // qtId가 일치하지 않는 것만 남김
+    
+    localStorage.setItem('myQts', JSON.stringify(qts));
+    loadQtList(); // 목록 새로고침
 }

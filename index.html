@@ -20,6 +20,7 @@
         <div class="header-controls">
             <h2>성경 선택</h2>
             <div>
+                <button id="my-qt-button" class="header-icon-button" title="Q.T. 묵상">🙏</button>
                 <button id="my-memos-button" class="header-icon-button" title="내 메모 보기">📝</button>
                 <div class="theme-switch-wrapper">
                     <label class="theme-switch" for="theme-toggle-main">
@@ -97,7 +98,6 @@
                     <button id="quick-jump-go">이동</button>
                 </div>
             </div>
-            
             <div id="quick-search-box" class="bottom-control-box">
                 <div id="quick-search-controls">
                     <select id="quick-search-type">
@@ -152,6 +152,96 @@
         </div>
         <div id="memos-list-container"></div>
     </div>
+
+    <div id="qt-list-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-from-qt-list" class="back-button">&larr; 책 목록</button>
+            <h2>Q.T. 묵상 목록</h2>
+            <div>
+                <button class="home-button header-icon-button" title="홈으로">🏠</button>
+                <div class="theme-switch-wrapper">
+                    <label class="theme-switch" for="theme-toggle-qt-list">
+                        <input type="checkbox" id="theme-toggle-qt-list" class="theme-toggle-input" />
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+        <div id="qt-list-controls">
+            <button id="new-qt-button" class="qt-new-button">새 묵상하기</button>
+        </div>
+        <div id="qt-list-container"></div>
+    </div>
+
+    <div id="qt-entry-screen" class="screen hidden">
+        <div class="header-controls">
+            <button id="back-from-qt-entry" class="back-button">&larr; 묵상 목록</button>
+            <h2 id="qt-entry-title">오늘의 묵상</h2> <div>
+                <button id="qt-save-button" class="header-icon-button" title="저장">💾</button>
+            </div>
+        </div>
+
+        <div class="qt-entry-scroll-container">
+            <div class="qt-step-box">
+                <h3>성구 선택하기</h3>
+                <div id="qt-scripture-controls">
+                    <select id="qt-book-select"></select>
+                    <select id="qt-chapter-select"></select>
+                    <button id="qt-select-go-btn" class="qt-btn">선택</button>
+                </div>
+                <div id="qt-scripture-options">
+                    <button id="qt-select-proverbs-btn" class="qt-btn-alt">오늘의 잠언</button>
+                    <button id="qt-select-random-btn" class="qt-btn-alt">랜덤 구절</button>
+                </div>
+                <div id="qt-scripture-display" class="hidden">
+                    <h4 id="qt-scripture-ref"></h4>
+                    <p id="qt-scripture-text"></p>
+                </div>
+            </div>
+
+            <div class="qt-step-box">
+                <h3>QT 1단계: 성경 묵상하기</h3>
+                <p class="qt-step-guide">(위의 선택된 성구를 묵상합니다)</p>
+            </div>
+            <div class="qt-step-box">
+                <h3>QT 2단계: 와닿는 구절 or 단어</h3>
+                <textarea id="qt-step2" class="qt-textarea" rows="3" placeholder="가장 와닿는 구절이나 단어를 적어보세요"></textarea>
+            </div>
+            <div class="qt-step-box">
+                <h3>QT 3단계: 나에게 하시는 말씀</h3>
+                <textarea id="qt-step3" class="qt-textarea" rows="5" placeholder="이 구절을 통해 하나님이 나에게 무엇을 말씀하시나요?"></textarea>
+            </div>
+            <div class="qt-step-box">
+                <h3>QT 4단계: 삶에 적용할 점</h3>
+                <textarea id="qt-step4" class="qt-textarea" rows="5" placeholder="오늘 하루 나의 삶에 어떻게 적용할 수 있을까요?"></textarea>
+            </div>
+            <div class="qt-step-box">
+                <h3>QT 5단계: 기도문</h3>
+                <textarea id="qt-step5" class="qt-textarea" rows="6" placeholder="주신 말씀을 붙잡고 기도문을 작성해보세요"></textarea>
+            </div>
+            
+            <div class="qt-step-box">
+                <h3>QT 6단계: 기도 시간 정하기 (기초)</h3>
+                <div class="qt-alarm-inputs">
+                    <label>시간 1: <input type="time" id="qt-alarm1"></label>
+                    <label>시간 2: <input type="time" id="qt-alarm2"></label>
+                </div>
+            </div>
+
+            <div class="qt-step-box">
+                <h3>다음날 묵상 미리 정하기 (기초)</h3>
+                <div class="qt-alarm-inputs">
+                    <label>시간: <input type="time" id="qt-next-alarm"></label>
+                    <label>장소: <input type="text" id="qt-next-place" class="qt-input" placeholder="예: 책상 앞"></label>
+                </div>
+            </div>
+
+            <div class="qt-step-box qt-alarm-notice">
+                <p>💡 <b>알림:</b> '기도 시간'과 '다음날 묵상' 알람은 나중에 모바일 앱 버전에서 실제 알림으로 작동하도록 기초를 마련하는 단계입니다.</p>
+            </div>
+        </div>
+    </div>
+
 
     <div id="memo-modal-overlay" class="hidden">
         <div id="memo-modal">

@@ -22,6 +22,7 @@
     --color-accent-green: #28a745;
     --color-accent-yellow: #ffc107;
     --color-accent-yellow-text: #333;
+    --color-accent-red: #ef4444; /* (신규) 삭제 버튼용 */
     
     --color-hanja-text: #0056b3;
     --color-hanja-border: #007bff;
@@ -54,6 +55,7 @@ body.dark-mode {
     --color-accent-green: #4ade80;
     --color-accent-yellow: #facc15;
     --color-accent-yellow-text: #121212;
+    --color-accent-red: #f87171; /* (신규) 삭제 버튼용 */
 
     --color-hanja-text: #93c5fd;
     --color-hanja-border: #3b82f6;
@@ -110,10 +112,20 @@ h3.testament-title {
 .header-icon-button:hover {
     background-color: var(--color-bg-alt);
 }
+/* (신규) Q.T. 버튼 */
+#my-qt-button {
+    border-color: var(--color-accent-green);
+}
 /* (새 스타일) 홈 버튼 */
 .home-button {
     border-color: var(--color-accent-blue);
 }
+/* (신규) Q.T. 저장 버튼 */
+#qt-save-button {
+    border-color: var(--color-accent-green);
+    font-size: 1.4em; /* 아이콘이므로 좀 더 크게 */
+}
+
 
 /* --- 4. 그리드 아이템 (책/장 버튼) --- */
 .grid-container {
@@ -156,7 +168,6 @@ h3.testament-title {
 #chapter-display { 
     padding: 15px; 
     /* (수정) 하단 여백을 각주 컨테이너로 이동시킴 */
-    /* padding-bottom: 150px; <-- 이 줄 삭제 */
 }
 #chapter-display p.verse {
     margin-bottom: 12px;
@@ -194,7 +205,7 @@ h3.testament-title {
     background-color: var(--color-text); color: var(--color-bg); border-color: var(--color-text);
 }
 
-/* --- 8. (대폭 수정) 하단 빠른 이동 / 검색창 (고정) --- */
+/* --- 8. 하단 빠른 이동 / 검색창 (고정) --- */
 #bottom-controls-container {
     display: flex;
     flex-wrap: wrap; /* 좁은 화면에서 줄바꿈 */
@@ -203,68 +214,49 @@ h3.testament-title {
     background-color: var(--color-bg-alt);
     border-top: 1px solid var(--color-border);
     
-    /* (중요) 하단 고정 */
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
     box-sizing: border-box;
-    z-index: 9; /* selection-controls(10)보다 낮게 */
+    z-index: 9; 
 }
 #bottom-controls-container.hidden {
     display: none;
 }
-
-/* (신규) 각 박스 공통 스타일 */
 .bottom-control-box {
-    /* (수정) flex-basis를 300px -> 0으로 변경 (똑같이 나눠갖기) */
     flex: 1 1 0;
-    min-width: 0; /* (추가) flex 축소 시 0까지 줄어들도록 */
+    min-width: 0; 
     border: 1px solid var(--color-border);
     border-radius: 8px;
-    padding: 8px 10px; /* (수정) h3가 사라져서 패딩 줄임 */
+    padding: 8px 10px; 
 }
-
-/* (수정) h3 관련 스타일 삭제 */
-
-/* (수정) 내부 컨트롤 래퍼 */
 #quick-jump-controls, #quick-search-controls {
     display: flex;
     gap: 5px;
 }
-
-/* (신규) '성경 이동' (파란색) 테마 */
 #quick-jump-box {
     background-color: var(--color-ot-bg);
     border-color: var(--color-ot-border);
 }
-/* (수정) h3 스타일 삭제 */
-
-/* (신규) '통합 검색' (흰색) 테마 */
 #quick-search-box {
     background-color: var(--color-bg); /* 흰색 */
     border-color: var(--color-border);
 }
-/* (수정) h3 스타일 삭제 */
-
-
-/* (수정) 컨트롤 내부 아이템 스타일 */
 #quick-jump-controls select, #quick-jump-controls button, 
 #quick-search-controls select, #quick-search-controls button, #quick-search-controls input {
-    padding: 8px; /* 약간 줄임 */
+    padding: 8px;
     font-size: 14px;
     background-color: var(--color-bg-alt-2); color: var(--color-text);
     border: 1px solid var(--color-border-alt); border-radius: 5px;
-    width: 100%; /* (추가) flex 자식 요소가 부모 너비에 맞게 */
+    width: 100%; 
 }
-
-/* (수정) min-width 제거, flex 비율로만 조절 */
 #quick-jump-book { flex: 3; }
 #quick-jump-chapter { flex: 2; }
 #quick-jump-go { 
     flex: 1; 
     cursor: pointer; font-weight: bold; 
-    background-color: var(--color-accent-blue); /* (색상 1) 파란색 */
+    background-color: var(--color-accent-blue);
     border-color: var(--color-accent-blue); 
     color: #fff; 
 }
@@ -273,7 +265,7 @@ h3.testament-title {
 #quick-jump-search-go { 
     flex: 1;
     cursor: pointer; font-weight: bold; 
-    background-color: var(--color-accent-green); /* (색상 2) 녹색 */
+    background-color: var(--color-accent-green);
     border-color: var(--color-accent-green); 
     color: var(--color-bg); 
 }
@@ -335,12 +327,10 @@ h3.testament-title {
 
 /* --- 11. 구절 선택 및 복사 (수정) --- */
 #chapter-display p.verse-selected {
-    /* (수정) 다크 모드에서도 잘 보이도록 변경 */
     background-color: var(--color-ot-bg);
     border-left: 3px solid var(--color-accent-blue);
     padding-left: 12px; 
 }
-/* (수정) 하단 고정, z-index 추가 */
 #selection-controls {
     display: flex;
     justify-content: space-around;
@@ -374,7 +364,6 @@ body.dark-mode #selection-controls span { color: var(--color-accent-yellow); }
 }
 
 /* --- 12. 사전/메모 연결 --- */
-/* (수정) 메모된 구간 (진하게 + 밑줄 + 각주번호) */
 .word-memo {
     font-weight: bold;
     color: var(--color-memo-text);
@@ -513,7 +502,7 @@ input:checked + .slider:before {
     color: var(--color-bg);
 }
 #memo-delete-button {
-    background-color: #ef4444;
+    background-color: var(--color-accent-red);
     color: #fff;
     margin-right: auto;
 }
@@ -552,7 +541,7 @@ input:checked + .slider:before {
     color: var(--color-text-subtle);
 }
 
-/* --- 16. (새 스타일) 각주(Footnote) --- */
+/* --- 16. 각주(Footnote) --- */
 #footnote-container {
     padding: 15px;
     margin-top: 30px;
@@ -581,4 +570,173 @@ input:checked + .slider:before {
     display: inline;
     margin: 0;
     color: var(--color-text);
+}
+
+/* --- (신규) 17. 'Q.T. 목록' 화면 --- */
+#qt-list-controls {
+    padding: 15px;
+    background-color: var(--color-bg-alt);
+    border-bottom: 1px solid var(--color-border);
+}
+.qt-new-button {
+    width: 100%;
+    padding: 12px;
+    font-size: 1.1em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--color-accent-green);
+    color: var(--color-bg);
+}
+#qt-list-container {
+    padding: 15px;
+}
+.qt-list-item {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+}
+.qt-list-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.qt-list-item-header strong {
+    font-size: 1.2em;
+    color: var(--color-accent-blue);
+}
+.qt-list-item-header span {
+    font-size: 0.9em;
+    color: var(--color-text-subtle);
+}
+.qt-list-item p {
+    margin: 0 0 10px 0;
+    color: var(--color-text);
+}
+.delete-qt-btn {
+    padding: 8px 12px;
+    font-size: 0.9em;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: var(--color-accent-red);
+    color: #fff;
+    float: right; /* 오른쪽 정렬 */
+}
+
+/* --- (신규) 18. 'Q.T. 입력' 화면 --- */
+.qt-entry-scroll-container {
+    padding: 15px;
+}
+.qt-step-box {
+    background: var(--color-bg-alt);
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    margin-bottom: 15px;
+    padding: 15px;
+}
+.qt-step-box h3 {
+    margin: 0 0 10px 0;
+    color: var(--color-text);
+    border-bottom: 1px solid var(--color-border-alt);
+    padding-bottom: 10px;
+}
+.qt-step-guide {
+    font-size: 0.9em;
+    color: var(--color-text-subtle);
+    margin: 0;
+}
+.qt-textarea, .qt-input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10px;
+    font-family: 'Noto Sans KR', sans-serif;
+    font-size: 1em;
+    border: 1px solid var(--color-border-alt);
+    border-radius: 5px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+}
+
+#qt-scripture-controls {
+    display: flex;
+    gap: 5px;
+    margin-bottom: 10px;
+}
+#qt-book-select { flex: 3; }
+#qt-chapter-select { flex: 2; }
+.qt-btn, .qt-btn-alt {
+    padding: 8px 12px;
+    font-size: 14px;
+    background-color: var(--color-bg-alt-2); color: var(--color-text);
+    border: 1px solid var(--color-border-alt); border-radius: 5px;
+    cursor: pointer;
+}
+#qt-select-go-btn {
+    flex: 1;
+    background-color: var(--color-accent-blue);
+    border-color: var(--color-accent-blue);
+    color: #fff;
+    font-weight: bold;
+}
+#qt-scripture-options {
+    display: flex;
+    gap: 10px;
+}
+.qt-btn-alt {
+    flex: 1;
+    background-color: var(--color-ot-bg);
+    border-color: var(--color-ot-border);
+    color: var(--color-ot-text);
+    font-weight: bold;
+}
+#qt-scripture-display {
+    margin-top: 15px;
+    padding: 10px;
+    background-color: var(--color-bg);
+    border-radius: 5px;
+    border: 1px dashed var(--color-border-alt);
+}
+#qt-scripture-display h4 {
+    margin: 0 0 10px 0;
+    color: var(--color-accent-blue);
+}
+#qt-scripture-display p {
+    margin: 0;
+    white-space: pre-wrap;
+    line-height: 1.7;
+}
+
+.qt-alarm-inputs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+.qt-alarm-inputs label {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.qt-alarm-inputs input[type="time"], .qt-alarm-inputs input[type="text"] {
+    padding: 8px;
+    font-size: 14px;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border-alt);
+    border-radius: 5px;
+}
+
+.qt-alarm-notice {
+    background-color: var(--color-ot-bg);
+    border-color: var(--color-ot-border);
+}
+.qt-alarm-notice p {
+    margin: 0;
+    color: var(--color-ot-text);
+    font-size: 0.9em;
 }
