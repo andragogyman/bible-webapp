@@ -155,7 +155,8 @@ h3.testament-title {
 /* --- 6. 본문 내용 --- */
 #chapter-display { 
     padding: 15px; 
-    padding-bottom: 100px;
+    /* (수정) 하단 여백을 각주 컨테이너로 이동시킴 */
+    /* padding-bottom: 150px; <-- 이 줄 삭제 */
 }
 #chapter-display p.verse {
     margin-bottom: 12px;
@@ -170,7 +171,6 @@ h3.testament-title {
     margin-right: 6px; 
     font-weight: bold;
     cursor: pointer;
-    user-select: none;
 }
 #chapter-display sup:hover {
     color: var(--color-text);
@@ -194,38 +194,85 @@ h3.testament-title {
     background-color: var(--color-text); color: var(--color-bg); border-color: var(--color-text);
 }
 
-/* --- 8. (수정) 하단 빠른 이동 / 검색창 --- */
-#quick-jump-controls, #quick-search-controls {
+/* --- 8. (대폭 수정) 하단 빠른 이동 / 검색창 (고정) --- */
+#bottom-controls-container {
     display: flex;
-    flex-wrap: wrap;
-    padding: 10px 15px;
+    flex-wrap: wrap; /* 좁은 화면에서 줄바꿈 */
     gap: 10px;
+    padding: 10px 15px;
     background-color: var(--color-bg-alt);
     border-top: 1px solid var(--color-border);
+    
+    /* (중요) 하단 고정 */
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 9; /* selection-controls(10)보다 낮게 */
 }
-/* 두번째 바는 위쪽 테두리 없음 */
-#quick-search-controls {
-    border-top: none;
-    padding-top: 0;
+#bottom-controls-container.hidden {
+    display: none;
 }
+
+/* (신규) 각 박스 공통 스타일 */
+.bottom-control-box {
+    /* (수정) flex-basis를 300px -> 0으로 변경 (똑같이 나눠갖기) */
+    flex: 1 1 0;
+    min-width: 0; /* (추가) flex 축소 시 0까지 줄어들도록 */
+    border: 1px solid var(--color-border);
+    border-radius: 8px;
+    padding: 8px 10px; /* (수정) h3가 사라져서 패딩 줄임 */
+}
+
+/* (수정) h3 관련 스타일 삭제 */
+
+/* (수정) 내부 컨트롤 래퍼 */
+#quick-jump-controls, #quick-search-controls {
+    display: flex;
+    gap: 5px;
+}
+
+/* (신규) '성경 이동' (파란색) 테마 */
+#quick-jump-box {
+    background-color: var(--color-ot-bg);
+    border-color: var(--color-ot-border);
+}
+/* (수정) h3 스타일 삭제 */
+
+/* (신규) '통합 검색' (흰색) 테마 */
+#quick-search-box {
+    background-color: var(--color-bg); /* 흰색 */
+    border-color: var(--color-border);
+}
+/* (수정) h3 스타일 삭제 */
+
+
+/* (수정) 컨트롤 내부 아이템 스타일 */
 #quick-jump-controls select, #quick-jump-controls button, 
 #quick-search-controls select, #quick-search-controls button, #quick-search-controls input {
-    padding: 10px; font-size: 14px;
+    padding: 8px; /* 약간 줄임 */
+    font-size: 14px;
     background-color: var(--color-bg-alt-2); color: var(--color-text);
     border: 1px solid var(--color-border-alt); border-radius: 5px;
+    width: 100%; /* (추가) flex 자식 요소가 부모 너비에 맞게 */
 }
-#quick-jump-book { flex: 3; min-width: 120px; }
-#quick-jump-chapter { flex: 1; min-width: 60px; }
+
+/* (수정) min-width 제거, flex 비율로만 조절 */
+#quick-jump-book { flex: 3; }
+#quick-jump-chapter { flex: 2; }
 #quick-jump-go { 
-    flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; 
+    flex: 1; 
+    cursor: pointer; font-weight: bold; 
     background-color: var(--color-accent-blue); /* (색상 1) 파란색 */
     border-color: var(--color-accent-blue); 
     color: #fff; 
 }
-#quick-search-type { flex: 1; min-width: 70px; }
-#quick-jump-search { flex: 4; min-width: 150px; }
+#quick-search-type { flex: 2; }
+#quick-jump-search { flex: 3; }
 #quick-jump-search-go { 
-    flex: 1; min-width: 50px; cursor: pointer; font-weight: bold; 
+    flex: 1;
+    cursor: pointer; font-weight: bold; 
     background-color: var(--color-accent-green); /* (색상 2) 녹색 */
     border-color: var(--color-accent-green); 
     color: var(--color-bg); 
@@ -286,12 +333,14 @@ h3.testament-title {
     border-radius: 3px; padding: 0 2px;
 }
 
-/* --- 11. 구절 선택 및 복사 --- */
+/* --- 11. 구절 선택 및 복사 (수정) --- */
 #chapter-display p.verse-selected {
-    background-color: #4a402a;
-    border-left: 3px solid var(--color-accent-yellow);
+    /* (수정) 다크 모드에서도 잘 보이도록 변경 */
+    background-color: var(--color-ot-bg);
+    border-left: 3px solid var(--color-accent-blue);
     padding-left: 12px; 
 }
+/* (수정) 하단 고정, z-index 추가 */
 #selection-controls {
     display: flex;
     justify-content: space-around;
@@ -307,7 +356,9 @@ h3.testament-title {
     z-index: 10;
 }
 #selection-controls.hidden { display: none; }
-#selection-controls span { font-weight: bold; color: var(--color-accent-yellow); }
+#selection-controls span { font-weight: bold; color: var(--color-text); }
+body.dark-mode #selection-controls span { color: var(--color-accent-yellow); }
+
 #selection-controls button {
     padding: 10px 15px; font-size: 14px;
     background-color: var(--color-bg-alt-2); color: var(--color-text);
@@ -323,21 +374,16 @@ h3.testament-title {
 }
 
 /* --- 12. 사전/메모 연결 --- */
-.word-general {
-    cursor: pointer;
-    text-decoration: underline;
-    text-decoration-color: var(--color-border);
-    text-decoration-thickness: 1px;
-}
-.word-general:hover {
-    color: var(--color-text);
-    background-color: var(--color-bg-alt-2);
-}
+/* (수정) 메모된 구간 (진하게 + 밑줄 + 각주번호) */
 .word-memo {
     font-weight: bold;
     color: var(--color-memo-text);
     cursor: pointer;
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: var(--color-memo-text);
+    text-decoration-thickness: 1px;
+    border-radius: 2px;
+    transition: background-color 0.2s;
 }
 .word-memo:hover {
     background-color: var(--color-bg-alt-2);
@@ -347,6 +393,7 @@ h3.testament-title {
     vertical-align: super;
     margin-left: 2px;
     color: var(--color-accent-blue);
+    text-decoration: none; /* sup에는 밑줄 제거 */
 }
 .word-hanja {
     color: var(--color-hanja-text);
@@ -354,6 +401,8 @@ h3.testament-title {
     text-decoration: underline;
     text-decoration-color: var(--color-hanja-border);
     text-decoration-thickness: 1px;
+    border-radius: 2px;
+    transition: background-color 0.2s;
 }
 .word-hanja:hover {
     color: var(--color-text);
@@ -433,6 +482,7 @@ input:checked + .slider:before {
 #memo-modal h3 {
     margin-top: 0;
     color: var(--color-accent-yellow);
+    word-break: break-all; /* 선택한 구간이 길 경우 줄바꿈 */
 }
 #memo-modal textarea {
     width: 100%;
@@ -508,6 +558,8 @@ input:checked + .slider:before {
     margin-top: 30px;
     border-top: 2px solid var(--color-border);
     background-color: var(--color-memo-footnote-bg);
+    /* (수정) 여기에 하단 여백 추가! */
+    padding-bottom: 150px;
 }
 .footnote-item {
     font-size: 0.9em;

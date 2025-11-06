@@ -9,12 +9,14 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     
-    <link rel="stylesheet" href="style.css?v=7">
-    <script src="data.js?v=7" defer></script>
-    <script src="data_hanja.js?v=7" defer></script>
-    <script src="app.js?v=7" defer></script>
+    <link rel="stylesheet" href="style.css?v=8">
+    <script src="data.js?v=8" defer></script>
+    <script src="data_hanja.js?v=8" defer></script>
+    <script src="app.js?v=8" defer></script>
 </head>
-<body class="dark-mode"> <div id="book-screen" class="screen">
+<body class="dark-mode"> 
+    
+    <div id="book-screen" class="screen">
         <div class="header-controls">
             <h2>성경 선택</h2>
             <div>
@@ -87,19 +89,26 @@
         
         <div id="footnote-container"></div>
         
-        <div id="quick-jump-controls">
-            <select id="quick-jump-book"></select>
-            <select id="quick-jump-chapter"></select>
-            <button id="quick-jump-go">이동</button>
-        </div>
-        <div id="quick-search-controls">
-            <select id="quick-search-type">
-                <option value="integrated">통합</option>
-                <option value="bible">성경</option>
-                <option value="memo">메모</option>
-            </select>
-            <input type="text" id="quick-jump-search" placeholder="검색">
-            <button id="quick-jump-search-go">검색</button>
+        <div id="bottom-controls-container" class="hidden">
+            <div id="quick-jump-box" class="bottom-control-box">
+                <div id="quick-jump-controls">
+                    <select id="quick-jump-book"></select>
+                    <select id="quick-jump-chapter"></select>
+                    <button id="quick-jump-go">이동</button>
+                </div>
+            </div>
+            
+            <div id="quick-search-box" class="bottom-control-box">
+                <div id="quick-search-controls">
+                    <select id="quick-search-type">
+                        <option value="integrated">통합</option>
+                        <option value="bible">성경</option>
+                        <option value="memo">메모</option>
+                    </select>
+                    <input type="text" id="quick-jump-search" placeholder="검색">
+                    <button id="quick-jump-search-go">검색</button>
+                </div>
+            </div>
         </div>
         
         <div id="selection-controls" class="hidden">
